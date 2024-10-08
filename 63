@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
+  <title>LIFF App with Share and Login/Logout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    button {
+      display: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #btnLogin, #btnLogOut {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #btnShare {
+      background-color: #0084FF;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to My LIFF App</h1>
+  
+  <button id="btnLogin" onclick="liff.login()">Log In</button>
+  <button id="btnLogOut" onclick="logOut()">Log Out</button>
+  <button id="btnShare" onclick="sendShare()">Share Message</button>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    // ฟังก์ชันสำหรับแชร์ข้อความผ่าน Share Target Picker
+    async function sendShare() {
+      try {
+        const result = await liff.shareTargetPicker([
+          {
+            type: 'text',
+            text: 'Hello from my LIFF app!'
+          }
+        ]);
+
+        if (result) {
+          alert('Message sent successfully!');
+        } else {
+          alert('ShareTargetPicker was canceled.');
+        }
+      } catch (error) {
+        console.error('Error sending share:', error);
+        alert('Failed to send message.');
+      }
+    }
+
+    // ฟังก์ชันสำหรับล็อกเอาต์
+    function logOut() {
+      liff.logout();
+      window.location.reload();
+    }
+
+    // ฟังก์ชันเริ่มต้นของแอป
+    async function main() {
+      // เริ่มต้น LIFF ด้วย LIFF ID ของคุณ (แทนที่ "YOUR-LIFF-ID" ด้วย ID จริง)
+      await liff.init({ liffId: "YOUR-LIFF-ID" });
+
+      // ตรวจสอบว่าผู้ใช้ล็อกอินแล้วหรือไม่
+      if (liff.isLoggedIn()) {
+        document.getElementById("btnShare").style.display = "inline-block";
+        document.getElementById("btnLogOut").style.display = "inline-block";
+      } else {
+        document.getElementById("btnLogin").style.display = "inline-block";
+      }
+    }
+
+    // เรียกใช้งานฟังก์ชันหลัก
+    main();
+  </script>
+</body>
+</html>
